@@ -6,17 +6,21 @@ import java.sql.SQLException;
 
 /**
  * Singleton pattern pour gérer la connexion unique à la DB.
- * Respecte l'organisation DAO demandée[cite: 28].
+ * Les identifiants viennent des variables d'environnement DB_URL, DB_USER et DB_PASSWORD.
  */
 public class DatabaseConnection {
 
     private static DatabaseConnection instance;
     private Connection connection;
 
-    // Infos de connexion (A ADAPTER AVEC TES INFOS MYSQL)
-    private static final String URL = "jdbc:mysql://localhost:3306/womenshop_db";
-    private static final String USER = "root";
-    private static final String PASSWORD = "***"; // Mets ton mot de passe ici
+    private static final String URL = env("DB_URL", "jdbc:mysql://localhost:3306/womenshop_db");
+    private static final String USER = env("DB_USER", "root");
+    private static final String PASSWORD = env("DB_PASSWORD", "");
+
+    private static String env(String name, String defaultValue) {
+        String value = System.getenv(name);
+        return value != null ? value : defaultValue;
+    }
 
     private DatabaseConnection() {
         try {
